@@ -38,19 +38,24 @@ const Book: React.FC = () => {
             {/* Language Toggle Button */}
             <button
                 onClick={toggleLanguage}
-                className="absolute top-6 right-24 z-50 px-5 py-2.5 bg-white/90 backdrop-blur-md rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 font-semibold text-base border border-gray-200 hover:border-transparent"
+                className="absolute top-5 right-20 z-50 px-4 py-2.5 bg-white/95 backdrop-blur-md rounded-xl text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 font-bold text-sm border border-gray-200/50 hover:border-transparent group"
                 aria-label="Toggle Language"
             >
-                {language === 'ko' ? 'EN' : 'KO'}
+                <span className="flex items-center gap-1.5">
+                    <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                    {language === 'ko' ? 'EN' : 'KO'}
+                </span>
             </button>
 
             {/* Menu Toggle Button */}
             <button
                 onClick={() => setIsMenuOpen(true)}
-                className="absolute top-6 right-6 z-50 p-3 bg-white/90 backdrop-blur-md rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 border border-gray-200 hover:border-transparent"
+                className="absolute top-5 right-5 z-50 p-2.5 bg-white/95 backdrop-blur-md rounded-xl text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 border border-gray-200/50 hover:border-transparent group"
                 aria-label="Open Menu"
             >
-                <MenuIcon className="w-6 h-6" />
+                <MenuIcon className="w-5 h-5 transition-transform group-hover:scale-110" />
             </button>
 
             {/* Navigation Menu */}
