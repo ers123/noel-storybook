@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import type { Chapter as ChapterType } from '../data/story';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
+import { useLanguage } from '../context/LanguageContext';
+
 interface ChapterProps {
     chapter: ChapterType;
     onNext: () => void;
@@ -12,65 +14,108 @@ interface ChapterProps {
 }
 
 const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isLast }) => {
+    const { language } = useLanguage();
+    const title = language === 'ko' ? chapter.title : chapter.titleEn;
+    const content = language === 'ko' ? chapter.content : chapter.contentEn;
+
     return (
         <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col items-center justify-center min-h-screen p-4 bg-[#fdf6e3] text-[#5c4b51]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="w-full h-full flex flex-col md:flex-row bg-[#fdf6e3]"
         >
-            <div className="max-w-4xl w-full bg-white shadow-2xl rounded-lg overflow-hidden flex flex-col md:flex-row">
-                <div className="md:w-1/2 h-64 md:h-auto relative">
-                    <img
-                        src={chapter.image}
-                        alt={chapter.title}
-                        className="w-full h-full object-cover"
-                    />
+            {/* Left Page: Image (Desktop) / Top (Mobile) */}
+            <div className="w-full md:w-1/2 h-64 md:h-full relative overflow-hidden border-b md:border-b-0 md:border-r border-[#e6dcc3]">
+                <div className="absolute inset-0 bg-black/10 z-10 md:hidden"></div> {/* Mobile overlay for text contrast if needed, but we are splitting */}
+                <motion.img
+                    key={chapter.image}
+                    initial={{ scale: 1.1, opacity: 0.8 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 1.5 }}
+                    src={chapter.image}
+                    alt={title}
+                    className="w-full h-full object-cover sepia-[0.2]"
+                />
+                {/* Chapter Number Overlay */}
+                <div className="absolute top-6 left-6 z-20">
+                    <span className="inline-block px-3 py-1 bg-white/90 backdrop-blur-sm text-[#2c2420] font-serif text-sm font-bold tracking-widest uppercase rounded shadow-sm">
+                        Chapter {chapter.id}
+                    </span>
                 </div>
-                <div className="md:w-1/2 p-8 flex flex-col justify-between">
-                    <div>
-                        <h2 className="text-3xl font-bold mb-6 text-amber-800 font-serif">{chapter.title}</h2>
-                        <div className="space-y-4 text-lg leading-relaxed font-serif text-gray-700 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-amber-200">
-                            {chapter.content.map((paragraph, index) => (
-                                <p key={index}>
+            </div>
+
+            {/* Right Page: Content (Desktop) / Bottom (Mobile) */}
+            <div className="w-full md:w-1/2 h-full flex flex-col relative">
+                {/* Paper Texture Overlay */}
+                <div className="absolute inset-0 pointer-events-none opacity-30 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] mix-blend-multiply"></div>
+
+                <div className="flex-1 overflow-y-auto p-8 md:p-12 lg:p-16 scrollbar-thin scrollbar-thumb-[#d6cbb3] scrollbar-track-transparent">
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3, duration: 0.6 }}
+                        key={language} // Re-animate on language change
+                    >
+                        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-[#2c2420] font-serif leading-tight">
+                            {title}
+                        </h1>
+
+                        <div className="space-y-6 text-lg md:text-xl leading-relaxed text-[#5c4b51] font-serif">
+                            {content.map((paragraph, index) => (
+                                <p key={index} className={paragraph.startsWith('>') ? '' : 'text-justify'}>
                                     {paragraph.startsWith('>') ? (
-                                        <span className="block pl-4 border-l-4 border-amber-400 italic text-gray-600 my-2">
+                                        <span className="block pl-6 border-l-4 border-[#d97706] italic text-[#8c7b75] my-6 py-1 bg-[#fcfaf5] pr-4 rounded-r-lg">
                                             {paragraph.replace(/^>\s*/, '')}
                                         </span>
                                     ) : (
-                                        paragraph
+                                        paragraph.split('**').map((part, i) =>
+                                            i % 2 === 1 ? <strong key={i} className="font-bold text-[#b45309]">{part}</strong> : part
+                                        )
                                     )}
                                 </p>
                             ))}
                         </div>
-                    </div>
 
-                    <div className="flex justify-between mt-8 pt-4 border-t border-gray-100">
-                        <button
-                            onClick={onPrev}
-                            disabled={isFirst}
-                            className={`flex items-center px-4 py-2 rounded-full transition-colors ${isFirst
+                        {/* End of Chapter Decoration */}
+                        <div className="flex justify-center my-12 opacity-30">
+                            <div className="w-16 h-1 bg-[#2c2420] rounded-full"></div>
+                        </div>
+                    </motion.div>
+                </div>
+
+                {/* Navigation Footer */}
+                <div className="p-6 border-t border-[#e6dcc3] bg-[#fcfaf5] flex items-center justify-between relative z-20">
+                    <button
+                        onClick={onPrev}
+                        disabled={isFirst}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all font-serif font-medium
+                            ${isFirst
                                 ? 'text-gray-300 cursor-not-allowed'
-                                : 'text-amber-700 hover:bg-amber-50'
-                                }`}
-                        >
-                            <ArrowLeft className="w-5 h-5 mr-2" /> Prev
-                        </button>
-                        <span className="text-gray-400 self-center text-sm">
-                            {chapter.id} / 7
-                        </span>
-                        <button
-                            onClick={onNext}
-                            disabled={isLast}
-                            className={`flex items-center px-4 py-2 rounded-full transition-colors ${isLast
+                                : 'text-[#5c4b51] hover:bg-[#f0e6d2] hover:text-[#2c2420] active:scale-95'
+                            }`}
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                        <span className="hidden sm:inline">{language === 'ko' ? '이전' : 'Previous'}</span>
+                    </button>
+
+                    <span className="text-[#b45309] font-serif font-bold text-sm tracking-widest">
+                        {chapter.id} <span className="text-[#e6dcc3] mx-2">/</span> 7
+                    </span>
+
+                    <button
+                        onClick={onNext}
+                        disabled={isLast}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all font-serif font-medium
+                            ${isLast
                                 ? 'text-gray-300 cursor-not-allowed'
-                                : 'text-amber-700 hover:bg-amber-50'
-                                }`}
-                        >
-                            Next <ArrowRight className="w-5 h-5 ml-2" />
-                        </button>
-                    </div>
+                                : 'text-[#5c4b51] hover:bg-[#f0e6d2] hover:text-[#2c2420] active:scale-95'
+                            }`}
+                    >
+                        <span className="hidden sm:inline">{language === 'ko' ? '다음' : 'Next'}</span>
+                        <ArrowRight className="w-5 h-5" />
+                    </button>
                 </div>
             </div>
         </motion.div>
