@@ -371,7 +371,7 @@ export const story: Chapter[] = [
     id: 3,
     title: "고마워, 리아야~♥",
     titleEn: "Thank You, Lia~♥",
-    image: "assets/images/image_3.png",
+    image: "assets/images/image_3_1.jpg",
     content: [
       "다음 날 아침,",
       "학교에 가는 길은 조금 덜 무서웠다.",

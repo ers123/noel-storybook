@@ -87,49 +87,53 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                 </div>
 
                 {/* Navigation Footer */}
-                <div className="p-6 md:p-7 border-t border-gray-100 bg-white/80 backdrop-blur-sm flex items-center justify-between relative z-20">
+                <div className="p-5 md:p-6 border-t border-gray-200/50 bg-gradient-to-r from-white to-gray-50 flex items-center justify-between relative z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
                     <button
                         onClick={onPrev}
                         disabled={isFirst}
-                        className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl transition-all duration-300 font-semibold text-base
+                        className={`group flex items-center gap-2.5 px-5 py-3 rounded-xl transition-all duration-300 font-semibold text-sm md:text-base
                             ${isFirst
-                                ? 'text-gray-300 cursor-not-allowed bg-gray-50'
-                                : 'text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg hover:shadow-xl active:scale-95 hover:scale-[1.02]'
+                                ? 'text-gray-300 cursor-not-allowed bg-gray-100/70'
+                                : 'text-white bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 hover:from-indigo-600 hover:via-purple-600 hover:to-purple-700 shadow-md hover:shadow-indigo-500/30 hover:shadow-xl active:scale-95 hover:scale-[1.03] hover:-translate-x-0.5'
                             }`}
                     >
-                        <ArrowLeft className="w-5 h-5" />
+                        <ArrowLeft className={`w-4 h-4 md:w-5 md:h-5 transition-transform ${!isFirst && 'group-hover:-translate-x-1'}`} />
                         <span className="hidden sm:inline">{language === 'ko' ? '이전' : 'Previous'}</span>
                     </button>
 
-                    <div className="flex items-center gap-3">
-                        <div className="flex gap-1.5">
+                    <div className="flex items-center gap-4">
+                        <div className="hidden md:flex gap-2">
                             {Array.from({ length: 7 }).map((_, i) => (
                                 <div
                                     key={i}
-                                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                    className={`h-2 rounded-full transition-all duration-500 ${
                                         i === chapter.id - 1
-                                            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 w-8'
-                                            : 'bg-gray-300'
+                                            ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600 w-10 shadow-md shadow-indigo-300/50'
+                                            : i < chapter.id - 1
+                                            ? 'bg-gradient-to-r from-indigo-300 to-purple-300 w-2'
+                                            : 'bg-gray-200 w-2'
                                     }`}
                                 />
                             ))}
                         </div>
-                        <span className="text-gray-500 font-semibold text-sm ml-2">
-                            {chapter.id}/7
-                        </span>
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-full border border-indigo-100">
+                            <span className="text-indigo-600 font-bold text-sm">{chapter.id}</span>
+                            <span className="text-gray-400 text-xs">/</span>
+                            <span className="text-gray-500 font-medium text-sm">7</span>
+                        </div>
                     </div>
 
                     <button
                         onClick={onNext}
                         disabled={isLast}
-                        className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl transition-all duration-300 font-semibold text-base
+                        className={`group flex items-center gap-2.5 px-5 py-3 rounded-xl transition-all duration-300 font-semibold text-sm md:text-base
                             ${isLast
-                                ? 'text-gray-300 cursor-not-allowed bg-gray-50'
-                                : 'text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg hover:shadow-xl active:scale-95 hover:scale-[1.02]'
+                                ? 'text-gray-300 cursor-not-allowed bg-gray-100/70'
+                                : 'text-white bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 hover:from-indigo-600 hover:via-purple-600 hover:to-purple-700 shadow-md hover:shadow-indigo-500/30 hover:shadow-xl active:scale-95 hover:scale-[1.03] hover:translate-x-0.5'
                             }`}
                     >
                         <span className="hidden sm:inline">{language === 'ko' ? '다음' : 'Next'}</span>
-                        <ArrowRight className="w-5 h-5" />
+                        <ArrowRight className={`w-4 h-4 md:w-5 md:h-5 transition-transform ${!isLast && 'group-hover:translate-x-1'}`} />
                     </button>
                 </div>
             </div>
