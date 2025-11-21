@@ -34,12 +34,12 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentChapterId, onSelect
                         className="fixed top-0 left-0 bottom-0 w-80 bg-[#fdf6e3] z-50 shadow-2xl border-r border-[#e6dcc3] flex flex-col"
                     >
                         <div className="p-6 border-b border-[#e6dcc3] flex items-center justify-between bg-[#f0e6d2]">
-                            <h2 className="text-xl font-bold text-[#2c2420] font-serif flex items-center gap-2">
-                                <BookOpen className="w-5 h-5" />
+                            <h2 className="text-2xl font-bold text-[#2c2420] font-serif flex items-center gap-2">
+                                <BookOpen className="w-6 h-6" />
                                 {language === 'ko' ? '목차' : 'Table of Contents'}
                             </h2>
-                            <button onClick={onClose} className="p-2 hover:bg-[#e6dcc3] rounded-full transition-colors">
-                                <X className="w-5 h-5 text-[#5c4b51]" />
+                            <button onClick={onClose} className="p-3 hover:bg-[#e6dcc3] rounded-full transition-all hover:scale-110 active:scale-95">
+                                <X className="w-6 h-6 text-[#5c4b51]" />
                             </button>
                         </div>
 
@@ -51,14 +51,14 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentChapterId, onSelect
                                         onSelectChapter(index);
                                         onClose();
                                     }}
-                                    className={`w-full text-left px-6 py-4 transition-colors font-serif border-b border-[#f0e6d2] last:border-0
+                                    className={`w-full text-left px-6 py-5 transition-all font-serif border-b border-[#f0e6d2] last:border-0 hover:scale-[1.02] active:scale-[0.98]
                     ${chapter.id === currentChapterId
-                                            ? 'bg-[#f0e6d2] text-[#b45309] font-bold border-l-4 border-l-[#b45309]'
+                                            ? 'bg-[#f0e6d2] text-[#b45309] font-bold border-l-4 border-l-[#b45309] shadow-sm'
                                             : 'text-[#5c4b51] hover:bg-[#fcfaf5] hover:text-[#2c2420]'
                                         }`}
                                 >
-                                    <div className="text-xs uppercase tracking-wider mb-1 opacity-70">Chapter {chapter.id}</div>
-                                    <div className="text-lg leading-tight">{language === 'ko' ? chapter.title : chapter.titleEn}</div>
+                                    <div className="text-sm uppercase tracking-wider mb-1 opacity-70">Chapter {chapter.id}</div>
+                                    <div className="text-xl leading-tight">{language === 'ko' ? chapter.title : chapter.titleEn}</div>
                                 </button>
                             ))}
                         </div>

@@ -38,7 +38,7 @@ const Book: React.FC = () => {
             {/* Language Toggle Button */}
             <button
                 onClick={toggleLanguage}
-                className="absolute top-4 right-16 z-50 px-3 py-2 bg-[#fdf6e3]/80 backdrop-blur-sm rounded-full text-[#5c4b51] hover:bg-[#e6dcc3] hover:text-[#2c2420] transition-colors shadow-sm font-serif font-bold text-sm"
+                className="absolute top-4 right-20 z-50 px-4 py-3 bg-[#fdf6e3]/90 backdrop-blur-sm rounded-full text-[#5c4b51] hover:bg-[#e6dcc3] hover:text-[#2c2420] transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 font-serif font-bold text-base"
                 aria-label="Toggle Language"
             >
                 {language === 'ko' ? 'EN' : 'KO'}
@@ -47,7 +47,7 @@ const Book: React.FC = () => {
             {/* Menu Toggle Button */}
             <button
                 onClick={() => setIsMenuOpen(true)}
-                className="absolute top-4 right-4 z-50 p-2 bg-[#fdf6e3]/80 backdrop-blur-sm rounded-full text-[#5c4b51] hover:bg-[#e6dcc3] hover:text-[#2c2420] transition-colors shadow-sm"
+                className="absolute top-4 right-4 z-50 p-3 bg-[#fdf6e3]/90 backdrop-blur-sm rounded-full text-[#5c4b51] hover:bg-[#e6dcc3] hover:text-[#2c2420] transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95"
                 aria-label="Open Menu"
             >
                 <MenuIcon className="w-6 h-6" />
