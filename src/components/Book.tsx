@@ -38,7 +38,7 @@ const Book: React.FC = () => {
             {/* Language Toggle Button */}
             <button
                 onClick={toggleLanguage}
-                className="absolute top-4 right-20 z-50 px-4 py-3 bg-[#fdf6e3]/90 backdrop-blur-sm rounded-full text-[#5c4b51] hover:bg-[#e6dcc3] hover:text-[#2c2420] transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 font-serif font-bold text-base"
+                className="absolute top-6 right-24 z-50 px-5 py-2.5 bg-white/90 backdrop-blur-md rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 font-semibold text-base border border-gray-200 hover:border-transparent"
                 aria-label="Toggle Language"
             >
                 {language === 'ko' ? 'EN' : 'KO'}
@@ -47,7 +47,7 @@ const Book: React.FC = () => {
             {/* Menu Toggle Button */}
             <button
                 onClick={() => setIsMenuOpen(true)}
-                className="absolute top-4 right-4 z-50 p-3 bg-[#fdf6e3]/90 backdrop-blur-sm rounded-full text-[#5c4b51] hover:bg-[#e6dcc3] hover:text-[#2c2420] transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95"
+                className="absolute top-6 right-6 z-50 p-3 bg-white/90 backdrop-blur-md rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 border border-gray-200 hover:border-transparent"
                 aria-label="Open Menu"
             >
                 <MenuIcon className="w-6 h-6" />
