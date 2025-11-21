@@ -12,7 +12,7 @@ export const story: Chapter[] = [
     id: 1,
     title: "나는 왜 이럴까?",
     titleEn: "Why Am I Like This?",
-    image: "/assets/images/image_1.png",
+    image: "assets/images/image_1.png",
     content: [
       "오늘도 참 평화로운 날이다.",
       "다들 하하호호 웃으면서 학교에서 가는 소풍을 즐기고 있었다.",
@@ -203,7 +203,7 @@ export const story: Chapter[] = [
     id: 2,
     title: "내 친구 리아",
     titleEn: "My Friend Lia",
-    image: "/assets/images/image_2.png",
+    image: "assets/images/image_2.png",
     content: [
       "점심시간이 되었다.",
       "나는 밥을 먹는 둥 마는 둥,",
@@ -371,7 +371,7 @@ export const story: Chapter[] = [
     id: 3,
     title: "고마워, 리아야~♥",
     titleEn: "Thank You, Lia~♥",
-    image: "/assets/images/image_3.png",
+    image: "assets/images/image_3.png",
     content: [
       "다음 날 아침,",
       "학교에 가는 길은 조금 덜 무서웠다.",
@@ -557,7 +557,7 @@ export const story: Chapter[] = [
     id: 4,
     title: "공부는 왜 어려울까?",
     titleEn: "Why is Studying So Hard?",
-    image: "/assets/images/image_4.png",
+    image: "assets/images/image_4.png",
     content: [
       "며칠 뒤,",
       "수학 시간이었다.",
@@ -733,7 +733,7 @@ export const story: Chapter[] = [
     id: 5,
     title: "죽음의 문",
     titleEn: "The Door of Death",
-    image: "/assets/images/image_5.png",
+    image: "assets/images/image_5.png",
     content: [
       "학교 뒤편에는",
       "아무도 잘 가지 않는",
@@ -969,7 +969,7 @@ export const story: Chapter[] = [
     id: 6,
     title: "나는 틀린 게 아니고 다른 거야!",
     titleEn: "I'm Not Wrong, Just Different!",
-    image: "/assets/images/image_6.png",
+    image: "assets/images/image_6.png",
     content: [
       "며칠 뒤,",
       "국어 시간이었다.",
@@ -1176,7 +1176,7 @@ export const story: Chapter[] = [
     id: 7,
     title: "에필로그 – Heaven or… Hell",
     titleEn: "Epilogue – Heaven or… Hell",
-    image: "/assets/images/image_7.png",
+    image: "assets/images/image_7.png",
     content: [
       "어느 저녁,",
       "학교가 끝난 뒤",
