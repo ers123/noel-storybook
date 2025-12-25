@@ -58,8 +58,8 @@ body {
 @media (max-width: 640px) {
   /* Ensure comfortable reading on mobile */
   body {
-    font-size: 16px;
-    line-height: 1.7;
+    font-size: 18px;
+    line-height: 1.6;
   }
 
   /* Improve button touch targets on mobile */
@@ -69,13 +69,23 @@ body {
 
   /* Better spacing for small screens */
   .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
+  }
+
+  /* Optimize for iPhone notch and safe areas */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
   }
 }
 
 /* Tablet and desktop improvements */
 @media (min-width: 768px) {
   body {
+    font-size: 16px;
     line-height: 1.8;
   }
 }
