@@ -38,7 +38,7 @@ const Book: React.FC = () => {
             {/* Language Toggle Button */}
             <button
                 onClick={toggleLanguage}
-                className="absolute top-3 right-14 md:top-4 md:right-16 z-50 px-2.5 py-2 md:px-3 md:py-2 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 font-bold text-xs md:text-sm border border-gray-200/50 hover:border-transparent group min-h-[44px]"
+                className="absolute top-3 right-[60px] md:top-4 md:right-[68px] z-50 px-2.5 py-2 md:px-3 md:py-2 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 font-bold text-xs md:text-sm border border-gray-200/50 hover:border-transparent group min-h-[44px]"
                 aria-label="Toggle Language"
             >
                 <span className="flex items-center gap-1">

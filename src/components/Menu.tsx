@@ -63,7 +63,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentChapterId, onSelect
                                     {chapter.id === currentChapterId && (
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-500 via-purple-500 to-purple-600 rounded-r-full"></div>
                                     )}
-                                    <div className="flex items-center gap-2.5 md:gap-3 ml-1">
+                                    <div className="flex items-center gap-2.5 md:gap-3">
                                         <div
                                             className={`flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center font-bold text-sm transition-all duration-300 ${
                                                 chapter.id === currentChapterId
