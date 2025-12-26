@@ -38,17 +38,11 @@ const Book: React.FC = () => {
             {/* Language Toggle Button */}
             <button
                 onClick={toggleLanguage}
-                className="absolute z-50 bg-white/95 backdrop-blur-md rounded-xl text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 font-bold border border-gray-200/50 hover:border-transparent group min-h-[44px]"
-                style={{
-                    top: 'clamp(0.75rem, 2vw, 1.25rem)',
-                    right: 'clamp(3.5rem, 15vw, 5rem)',
-                    padding: 'clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.75rem, 2vw, 1rem)',
-                    fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)'
-                }}
+                className="absolute top-3 right-14 md:top-4 md:right-16 z-50 px-2.5 py-2 md:px-3 md:py-2 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 font-bold text-xs md:text-sm border border-gray-200/50 hover:border-transparent group min-h-[44px]"
                 aria-label="Toggle Language"
             >
-                <span className="flex items-center gap-[clamp(0.25rem,0.5vw,0.375rem)]">
-                    <svg style={{ width: 'clamp(1rem, 2vw, 1.25rem)', height: 'clamp(1rem, 2vw, 1.25rem)' }} className="transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span className="flex items-center gap-1">
+                    <svg className="w-3.5 h-3.5 md:w-4 md:h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                     </svg>
                     <span className="font-bold">{language === 'ko' ? 'EN' : 'KO'}</span>
@@ -58,15 +52,10 @@ const Book: React.FC = () => {
             {/* Menu Toggle Button */}
             <button
                 onClick={() => setIsMenuOpen(true)}
-                className="absolute z-50 bg-white/95 backdrop-blur-md rounded-xl text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 border border-gray-200/50 hover:border-transparent group min-h-[44px] min-w-[44px]"
-                style={{
-                    top: 'clamp(0.75rem, 2vw, 1.25rem)',
-                    right: 'clamp(0.75rem, 2vw, 1.25rem)',
-                    padding: 'clamp(0.625rem, 1.5vw, 0.875rem)'
-                }}
+                className="absolute top-3 right-3 md:top-4 md:right-4 z-50 p-2.5 md:p-3 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 border border-gray-200/50 hover:border-transparent group min-h-[44px] min-w-[44px]"
                 aria-label="Open Menu"
             >
-                <MenuIcon style={{ width: 'clamp(1.25rem, 2.5vw, 1.5rem)', height: 'clamp(1.25rem, 2.5vw, 1.5rem)' }} className="transition-transform group-hover:scale-110" />
+                <MenuIcon className="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:scale-110" />
             </button>
 
             {/* Navigation Menu */}
