@@ -27,7 +27,7 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
             className="w-full h-full flex flex-col md:flex-row bg-white"
         >
             {/* Left Page: Image (Desktop) / Top (Mobile) */}
-            <div className="w-full md:w-2/5 h-[35vh] md:h-full relative overflow-hidden flex-shrink-0">
+            <div className="w-full md:w-2/5 h-[28vh] md:h-full relative overflow-hidden flex-shrink-0">
                 <motion.img
                     key={chapter.image}
                     initial={{ scale: 1.05, opacity: 0 }}
@@ -48,22 +48,22 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
 
             {/* Right Page: Content (Desktop) / Bottom (Mobile) */}
             <div className="w-full md:w-3/5 h-full flex flex-col relative bg-gradient-to-br from-gray-50 to-white">
-                <div className="flex-1 overflow-y-auto px-5 py-4 md:px-12 md:py-8 lg:px-14 lg:py-10 scrollbar-thin">
+                <div className="flex-1 overflow-y-auto px-6 py-6 md:px-12 md:py-8 lg:px-14 lg:py-10 scrollbar-thin">
                     <motion.div
                         initial={{ y: 15, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2, duration: 0.5 }}
                         key={language}
                     >
-                        <h1 className="text-xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 lg:mb-8 text-gray-900 leading-tight">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-5 md:mb-6 lg:mb-8 text-gray-900 leading-tight">
                             {title}
                         </h1>
 
-                        <div className="space-y-3 md:space-y-4 text-sm md:text-base lg:text-lg leading-relaxed text-gray-700">
+                        <div className="space-y-4 md:space-y-5 text-base md:text-lg lg:text-xl leading-loose text-gray-700">
                             {content.map((paragraph, index) => (
                                 <p key={index} className={paragraph.startsWith('>') ? '' : 'text-left'}>
                                     {paragraph.startsWith('>') ? (
-                                        <span className="block pl-3 md:pl-4 border-l-4 border-indigo-400 italic text-gray-600 my-4 md:my-5 py-2 md:py-2.5 bg-indigo-50/50 pr-3 md:pr-4 rounded-r-xl text-xs md:text-sm lg:text-base backdrop-blur-sm">
+                                        <span className="block pl-4 md:pl-5 border-l-4 border-indigo-400 italic text-gray-600 my-5 md:my-6 py-3 md:py-3.5 bg-indigo-50/50 pr-4 md:pr-5 rounded-r-xl text-sm md:text-base lg:text-lg backdrop-blur-sm leading-loose">
                                             {paragraph.replace(/^>\s*/, '')}
                                         </span>
                                     ) : (
@@ -76,7 +76,7 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                         </div>
 
                         {/* End of Chapter Decoration */}
-                        <div className="flex justify-center my-10">
+                        <div className="flex justify-center my-12 md:my-10">
                             <div className="flex gap-1.5">
                                 <div className="w-2 h-2 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full"></div>
                                 <div className="w-2 h-2 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full"></div>
