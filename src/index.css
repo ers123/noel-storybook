@@ -21,7 +21,7 @@
 
 body {
   font-family: var(--font-primary);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fef6e8 0%, #fdf2dc 50%, #fef6e8 100%);
   color: var(--color-text);
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
@@ -42,12 +42,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
 }
 
 .font-primary {
