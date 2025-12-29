@@ -7,7 +7,7 @@ interface BookLayoutProps {
 const BookLayout: React.FC<BookLayoutProps> = ({ children }) => {
     return (
         <div className="min-h-screen w-full flex items-center justify-center p-2 md:p-4 lg:p-6">
-            <div className="relative w-full max-w-7xl h-[96vh] md:h-[90vh] bg-white rounded-xl md:rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col md:flex-row backdrop-blur-xl border border-white/20">
+            <div className="relative w-full max-w-7xl h-[96vh] md:h-[90vh] bg-white rounded-xl md:rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col md:flex-row border border-amber-100/30">
                 {children}
             </div>
         </div>

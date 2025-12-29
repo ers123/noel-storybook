@@ -38,7 +38,7 @@ const Book: React.FC = () => {
             {/* Language Toggle Button */}
             <button
                 onClick={toggleLanguage}
-                className="absolute top-3 right-[60px] md:top-4 md:right-[68px] z-50 px-2.5 py-2 md:px-3 md:py-2 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 font-bold text-xs md:text-sm border border-gray-200/50 hover:border-transparent group min-h-[44px]"
+                className="absolute top-3 right-[60px] md:top-4 md:right-[68px] z-50 px-2.5 py-2 md:px-3 md:py-2 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-amber-400 hover:via-orange-500 hover:to-orange-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-amber-500/30 hover:shadow-lg hover:scale-105 active:scale-95 font-bold text-xs md:text-sm border border-gray-200/50 hover:border-transparent group min-h-[44px]"
                 aria-label="Toggle Language"
             >
                 <span className="flex items-center gap-1">
@@ -52,7 +52,7 @@ const Book: React.FC = () => {
             {/* Menu Toggle Button */}
             <button
                 onClick={() => setIsMenuOpen(true)}
-                className="absolute top-3 right-3 md:top-4 md:right-4 z-50 p-2.5 md:p-3 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/30 hover:shadow-lg hover:scale-105 active:scale-95 border border-gray-200/50 hover:border-transparent group min-h-[44px] min-w-[44px]"
+                className="absolute top-3 right-3 md:top-4 md:right-4 z-50 p-2.5 md:p-3 bg-white/95 backdrop-blur-md rounded-lg text-gray-700 hover:bg-gradient-to-br hover:from-amber-400 hover:via-orange-500 hover:to-orange-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-amber-500/30 hover:shadow-lg hover:scale-105 active:scale-95 border border-gray-200/50 hover:border-transparent group min-h-[44px] min-w-[44px]"
                 aria-label="Open Menu"
             >
                 <MenuIcon className="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:scale-110" />
