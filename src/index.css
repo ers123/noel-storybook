@@ -56,6 +56,22 @@ body {
 
 /* Fluid, responsive design optimizations */
 
+/* Prose styling for reading experience */
+.prose-custom {
+  font-size: clamp(1.0625rem, 2vw, 1.125rem);
+  line-height: 1.75;
+  color: #1f2937;
+}
+
+.prose-custom .body-paragraph {
+  text-align: left;
+}
+
+.prose-custom .quote-block {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
 /* Improve button touch targets on all devices */
 button {
   min-height: 44px;
