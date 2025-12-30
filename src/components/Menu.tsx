@@ -43,7 +43,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentChapterId, onSelect
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto py-2">
+                        <div className="flex-1 overflow-y-auto">
                             {story.map((chapter, index) => (
                                 <button
                                     key={chapter.id}
@@ -51,40 +51,25 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentChapterId, onSelect
                                         onSelectChapter(index);
                                         onClose();
                                     }}
-                                    className={`group w-full text-left px-4 md:px-5 py-4 md:py-5 transition-all duration-200 border-b border-gray-100 last:border-0 relative min-h-[68px]
+                                    className={`w-full text-left px-6 py-4 transition-all duration-150 border-b border-gray-100 last:border-0 relative
                     ${chapter.id === currentChapterId
-                                            ? 'bg-gray-50 text-gray-900 font-medium'
+                                            ? 'bg-gray-900 text-white'
                                             : 'text-gray-700 hover:bg-gray-50'
                                         }`}
                                 >
-                                    {chapter.id === currentChapterId && (
-                                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-900"></div>
-                                    )}
-                                    <div className="flex items-center gap-3 md:gap-3.5">
-                                        <div
-                                            className={`flex-shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-lg flex items-center justify-center font-semibold text-sm md:text-base transition-all duration-200 ${
-                                                chapter.id === currentChapterId
-                                                    ? 'bg-gray-900 text-white'
-                                                    : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
-                                            }`}
-                                        >
-                                            {chapter.id}
+                                    <div className="flex items-baseline gap-4">
+                                        <div className={`flex-shrink-0 font-mono text-sm ${
+                                            chapter.id === currentChapterId ? 'text-gray-300' : 'text-gray-400'
+                                        }`}>
+                                            {String(chapter.id).padStart(2, '0')}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div
-                                                className={`text-[10px] md:text-xs font-medium uppercase tracking-wider mb-1 transition-colors ${
-                                                    chapter.id === currentChapterId ? 'text-gray-600' : 'text-gray-400'
-                                                }`}
-                                            >
-                                                Chapter {chapter.id}
-                                            </div>
-                                            <div className="text-sm md:text-base leading-snug truncate font-medium">
+                                            <div className={`text-base font-medium leading-snug ${
+                                                chapter.id === currentChapterId ? 'text-white' : 'text-gray-900'
+                                            }`}>
                                                 {language === 'ko' ? chapter.title : chapter.titleEn}
                                             </div>
                                         </div>
-                                        {chapter.id === currentChapterId && (
-                                            <div className="flex-shrink-0 w-2 h-2 bg-gray-900 rounded-full"></div>
-                                        )}
                                     </div>
                                 </button>
                             ))}
