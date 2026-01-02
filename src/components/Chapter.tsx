@@ -27,20 +27,22 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
             className="w-full h-full flex flex-col md:flex-row bg-white"
         >
             {/* Left Page: Image (Desktop) / Top (Mobile) */}
-            <div className="w-full md:w-5/12 relative overflow-hidden flex-shrink-0" style={{ aspectRatio: '4 / 3' }}>
-                <motion.img
-                    key={chapter.image}
-                    initial={{ scale: 1.05, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.8 }}
-                    src={chapter.image}
-                    alt={title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                />
-                {/* Chapter Number Badge */}
-                <div className="absolute top-3 left-3 md:top-6 md:left-6 z-20">
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-gray-900/75 text-white rounded-lg shadow-lg backdrop-blur-sm">
-                        <span className="font-medium text-xs md:text-sm tracking-wide">Chapter {chapter.id}</span>
+            <div className="w-full md:w-5/12 relative overflow-hidden flex-shrink-0">
+                <div className="relative w-full" style={{ paddingBottom: '75%' }}>
+                    <motion.img
+                        key={chapter.image}
+                        initial={{ scale: 1.05, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.8 }}
+                        src={chapter.image}
+                        alt={title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    {/* Chapter Number Badge */}
+                    <div className="absolute top-3 left-3 md:top-6 md:left-6 z-20">
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-gray-900/75 text-white rounded-lg shadow-lg backdrop-blur-sm">
+                            <span className="font-medium text-xs md:text-sm tracking-wide">Chapter {chapter.id}</span>
+                        </div>
                     </div>
                 </div>
             </div>
