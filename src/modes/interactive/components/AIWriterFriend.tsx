@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Settings } from 'lucide-react';
 
 interface AIWriterFriendProps {
   chapterId: number;
   selectedChoice: 'A' | 'B';
   storyContext: string;
   onContinue: (aiText: string | null) => void;
+  onOpenSettings?: () => void;
 }
 
 /**
@@ -20,22 +23,17 @@ interface AIWriterFriendProps {
 const AIWriterFriend: React.FC<AIWriterFriendProps> = ({
   chapterId,
   selectedChoice,
-  storyContext, // TODO: Will be used for actual AI API call
-  onContinue
+  storyContext,
+  onContinue,
+  onOpenSettings
 }) => {
-  // Prevent unused variable warning - will be used when implementing real AI API
-  void storyContext;
   const [isLoading, setIsLoading] = useState(false);
   const [aiText, setAiText] = useState<string | null>(null);
   const [showAI, setShowAI] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleRequestAI = async () => {
-    setIsLoading(true);
-
-    // TODO: Replace with actual API call
-    // For now, simulate AI response
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
+  // Mock responses as fallback
+  const getMockResponse = (chapterId: number, choice: 'A' | 'B'): string => {
     const mockResponses: Record<string, Record<'A' | 'B', string>> = {
       '1': {
         A: "Maybe there's someone out there who sees beyond appearances. Someone who understands what it's like to feel different.",
@@ -67,11 +65,62 @@ const AIWriterFriend: React.FC<AIWriterFriendProps> = ({
       }
     };
 
-    const response = mockResponses[chapterId]?.[selectedChoice] ||
+    return mockResponses[chapterId]?.[choice] ||
       "The story continues in ways you might not expect. What happens next depends on your next choice.";
+  };
 
-    setAiText(response);
-    setIsLoading(false);
+  const handleRequestAI = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Get API key from localStorage or environment variable
+      const apiKey = localStorage.getItem('gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY;
+
+      if (!apiKey) {
+        throw new Error('NO_API_KEY');
+      }
+
+      // Initialize Gemini AI
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+      // Create prompt for AI
+      const prompt = `You are a creative writing assistant helping a child (ages 5-10) continue a story.
+
+Context: ${storyContext}
+
+The child chose: Option ${selectedChoice}
+
+Write ONE short paragraph (maximum 3 sentences) that continues this story based on their choice.
+Remember:
+- Write for children ages 5-10
+- Keep it simple and engaging
+- Leave room for the next decision (don't complete the story)
+- Match the emotional tone of the original story
+- Don't give answers, just add possibilities to think about
+
+Continue the story:`;
+
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      const text = response.text();
+
+      setAiText(text);
+    } catch (err: any) {
+      console.error('Gemini API Error:', err);
+
+      if (err.message === 'NO_API_KEY') {
+        setError('No API key configured. Click Settings to add your Gemini API key.');
+      } else {
+        setError('Using fallback response (API call failed)');
+        // Fallback to mock response if API fails
+        const mockFallback = getMockResponse(chapterId, selectedChoice);
+        setAiText(mockFallback);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSkipAI = () => {
@@ -116,6 +165,31 @@ const AIWriterFriend: React.FC<AIWriterFriendProps> = ({
               It won't tell you what's "right" — it just adds ideas for you to think about.
             </p>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-xl"
+            >
+              <div className="flex items-start gap-3">
+                <span className="text-xl">⚠️</span>
+                <div className="flex-1">
+                  <p className="text-sm text-yellow-800">{error}</p>
+                  {error.includes('Settings') && onOpenSettings && (
+                    <button
+                      onClick={onOpenSettings}
+                      className="mt-2 flex items-center gap-2 px-3 py-1.5 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition-all"
+                    >
+                      <Settings className="w-4 h-4" />
+                      <span>Open Settings</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex gap-3">

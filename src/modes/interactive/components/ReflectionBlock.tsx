@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Mic } from 'lucide-react';
 
 interface ReflectionBlockProps {
   selectedChoice: 'A' | 'B';
@@ -19,6 +20,7 @@ const ReflectionBlock: React.FC<ReflectionBlockProps> = ({
 }) => {
   const [reflection, setReflection] = useState('');
   const [reflectionLength, setReflectionLength] = useState(0);
+  const [showVoiceHint, setShowVoiceHint] = useState(false);
 
   const handleReflectionChange = (text: string) => {
     setReflection(text);
@@ -31,6 +33,12 @@ const ReflectionBlock: React.FC<ReflectionBlockProps> = ({
 
   const handleSkip = () => {
     onSubmit(''); // Allow skip but log it
+  };
+
+  const handleVoiceInput = () => {
+    // TODO: Implement Web Speech API
+    setShowVoiceHint(true);
+    setTimeout(() => setShowVoiceHint(false), 3000);
   };
 
   return (
@@ -78,9 +86,33 @@ const ReflectionBlock: React.FC<ReflectionBlockProps> = ({
 
       {/* Reflection Input */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Your reflection:
-        </label>
+        <div className="flex items-center justify-between mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Your reflection:
+          </label>
+          <button
+            onClick={handleVoiceInput}
+            className="flex items-center gap-2 px-3 py-1.5 bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition-all text-sm font-medium"
+          >
+            <Mic className="w-4 h-4" />
+            <span>Voice (Coming Soon)</span>
+          </button>
+        </div>
+
+        {/* Voice Hint */}
+        {showVoiceHint && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-3 bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-xl"
+          >
+            <p className="text-sm text-blue-800">
+              🎤 Voice input is coming soon! For now, you can type your thoughts or ask a parent to help you write them down.
+            </p>
+          </motion.div>
+        )}
+
         <textarea
           value={reflection}
           onChange={(e) => handleReflectionChange(e.target.value)}

@@ -12,6 +12,7 @@ interface InteractivePageProps {
   pageIndex: number;
   totalPages: number;
   onComplete: (data: any) => void;
+  onOpenSettings?: () => void;
 }
 
 type PageState = 'story' | 'question' | 'choice' | 'ai' | 'reflection';
@@ -20,7 +21,8 @@ const InteractivePage: React.FC<InteractivePageProps> = ({
   chapter,
   pageIndex,
   totalPages,
-  onComplete
+  onComplete,
+  onOpenSettings
 }) => {
   const { language } = useLanguage();
   const title = language === 'ko' ? chapter.title : chapter.titleEn;
@@ -153,6 +155,7 @@ const InteractivePage: React.FC<InteractivePageProps> = ({
                 selectedChoice={selectedChoice!}
                 storyContext={storyText}
                 onContinue={handleAIContinue}
+                onOpenSettings={onOpenSettings}
               />
             )}
 
