@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import type { Chapter as ChapterType } from '../data/story';
+import type { Chapter as ChapterType } from '../../../shared/data/story';
 
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 interface ChapterProps {
     chapter: ChapterType;

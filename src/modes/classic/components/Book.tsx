@@ -5,9 +5,9 @@ import Chapter from './Chapter';
 import BookLayout from './BookLayout';
 import Menu from './Menu';
 import ProgressBar from './ProgressBar';
-import { story } from '../data/story';
+import { story } from '../../../shared/data/story';
 
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 const Book: React.FC = () => {
     const [currentChapterIndex, setCurrentChapterIndex] = useState(0);

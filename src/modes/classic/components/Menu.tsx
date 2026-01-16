@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, BookOpen } from 'lucide-react';
-import { story } from '../data/story';
+import { story } from '../../../shared/data/story';
 
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../../../shared/context/LanguageContext';
 
 interface MenuProps {
     isOpen: boolean;
