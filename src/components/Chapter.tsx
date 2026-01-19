@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import type { Chapter as ChapterType } from '../data/story';
+import type { Chapter as ChapterType, Choice } from '../data/story';
 
 import { useLanguage } from '../context/LanguageContext';
 
@@ -10,17 +10,41 @@ interface ChapterProps {
     onPrev: () => void;
     isFirst: boolean;
     isLast: boolean;
+    totalChapters: number;
 }
 
-const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isLast }) => {
+const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isLast, totalChapters }) => {
     const { language } = useLanguage();
     const title = language === 'ko' ? chapter.title : chapter.titleEn;
     const content = language === 'ko' ? chapter.content : chapter.contentEn;
+    const question = language === 'ko' ? chapter.question : chapter.questionEn;
+    const reflectionQuestion = language === 'ko'
+        ? chapter.reflectionQuestion ?? '왜 그 선택을 했어?'
+        : chapter.reflectionQuestionEn ?? 'Why did you choose that?';
 
-    // Chapter-based theme colors
+    const [selectedChoice, setSelectedChoice] = useState<Choice['id'] | null>(null);
+    const [showAiContinuation, setShowAiContinuation] = useState(false);
+    const [reflectionText, setReflectionText] = useState('');
+
+    const choices = useMemo(() => (
+        language === 'ko'
+            ? chapter.choices.map(choice => ({ ...choice, label: choice.text }))
+            : chapter.choices.map(choice => ({ ...choice, label: choice.textEn }))
+    ), [chapter.choices, language]);
+
+    const aiContinuation = language === 'ko' ? chapter.aiContinuation : chapter.aiContinuationEn;
+
+    const handleChoiceSelect = (choiceId: Choice['id']) => {
+        setSelectedChoice(choiceId);
+    };
+
+    const handleSkipQuestion = () => {
+        setSelectedChoice(null);
+    };
+
     const getChapterTheme = (chapterId: number) => {
         const themes = {
-            1: { // Why Am I Like This? - Dark, lonely
+            1: {
                 bg: 'from-slate-50/30 via-white to-gray-50/20',
                 badge: 'border-slate-200 bg-white/90',
                 badgeText: 'text-slate-600',
@@ -28,9 +52,10 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                 quote: 'border-slate-300 bg-slate-50/50',
                 highlight: 'bg-slate-200/70',
                 nav: 'from-slate-500 to-gray-500 hover:from-slate-600 hover:to-gray-600',
-                progress: 'bg-slate-400'
+                progress: 'bg-slate-400',
+                card: 'border-slate-200/70 bg-white/90'
             },
-            2: { // My Friend Lia - Warm, hopeful
+            2: {
                 bg: 'from-orange-50/30 via-white to-amber-50/20',
                 badge: 'border-orange-200 bg-white/90',
                 badgeText: 'text-orange-600',
@@ -38,9 +63,10 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                 quote: 'border-orange-300 bg-orange-50/50',
                 highlight: 'bg-orange-200/70',
                 nav: 'from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600',
-                progress: 'bg-orange-400'
+                progress: 'bg-orange-400',
+                card: 'border-orange-200/70 bg-white/90'
             },
-            3: { // Thank You Lia - Gratitude, joy
+            3: {
                 bg: 'from-pink-50/30 via-white to-rose-50/20',
                 badge: 'border-pink-200 bg-white/90',
                 badgeText: 'text-pink-600',
@@ -48,9 +74,10 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                 quote: 'border-pink-300 bg-pink-50/50',
                 highlight: 'bg-pink-200/70',
                 nav: 'from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600',
-                progress: 'bg-pink-400'
+                progress: 'bg-pink-400',
+                card: 'border-pink-200/70 bg-white/90'
             },
-            4: { // Why is Studying Hard - Growth, learning
+            4: {
                 bg: 'from-emerald-50/30 via-white to-teal-50/20',
                 badge: 'border-emerald-200 bg-white/90',
                 badgeText: 'text-emerald-600',
@@ -58,9 +85,10 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                 quote: 'border-emerald-300 bg-emerald-50/50',
                 highlight: 'bg-emerald-200/70',
                 nav: 'from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600',
-                progress: 'bg-emerald-400'
+                progress: 'bg-emerald-400',
+                card: 'border-emerald-200/70 bg-white/90'
             },
-            5: { // Door of Death - Mystery, courage
+            5: {
                 bg: 'from-violet-50/30 via-white to-purple-50/20',
                 badge: 'border-violet-200 bg-white/90',
                 badgeText: 'text-violet-600',
@@ -68,27 +96,8 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                 quote: 'border-violet-300 bg-violet-50/50',
                 highlight: 'bg-violet-200/70',
                 nav: 'from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600',
-                progress: 'bg-violet-400'
-            },
-            6: { // I'm Not Wrong - Self-acceptance, courage
-                bg: 'from-blue-50/30 via-white to-indigo-50/20',
-                badge: 'border-blue-200 bg-white/90',
-                badgeText: 'text-blue-600',
-                underline: 'from-blue-400 via-indigo-400 to-purple-400',
-                quote: 'border-blue-300 bg-blue-50/50',
-                highlight: 'bg-blue-200/70',
-                nav: 'from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600',
-                progress: 'bg-blue-400'
-            },
-            7: { // Epilogue - Sunset, hope
-                bg: 'from-red-50/30 via-orange-50/20 to-amber-50/20',
-                badge: 'border-red-200 bg-white/90',
-                badgeText: 'text-red-600',
-                underline: 'from-red-400 via-orange-400 to-amber-400',
-                quote: 'border-red-300 bg-red-50/50',
-                highlight: 'bg-yellow-200/70',
-                nav: 'from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600',
-                progress: 'bg-red-400'
+                progress: 'bg-violet-400',
+                card: 'border-violet-200/70 bg-white/90'
             }
         };
         return themes[chapterId as keyof typeof themes] || themes[1];
@@ -109,7 +118,6 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
             }}
             className="w-full h-full flex flex-col md:flex-row bg-white"
         >
-            {/* Left Page: Image (Desktop) / Top (Mobile) */}
             <div className="w-full md:w-5/12 relative flex-shrink-0 bg-gray-100">
                 <div className="relative w-full h-0" style={{ paddingBottom: '75%' }}>
                     <div className="absolute inset-0">
@@ -120,20 +128,19 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                             transition={{
                                 duration: 0.9,
                                 ease: [0.16, 1, 0.3, 1],
-                                scale: { duration: 1, ease: "easeOut" }
+                                scale: { duration: 1, ease: 'easeOut' }
                             }}
                             src={chapter.image}
                             alt={title}
                             className="w-full h-full object-cover"
                         />
                     </div>
-                    {/* Chapter Number Badge */}
                     <motion.div
                         className="absolute top-4 left-4 md:top-6 md:left-6 z-20"
                         initial={{ scale: 0, rotate: -180 }}
                         animate={{ scale: 1, rotate: 0 }}
                         transition={{
-                            type: "spring",
+                            type: 'spring',
                             stiffness: 260,
                             damping: 20,
                             delay: 0.3
@@ -141,13 +148,14 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                     >
                         <div className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 backdrop-blur-sm rounded-full shadow-lg border-2 ${theme.badge}`}>
                             <span className="text-2xl">📖</span>
-                            <span className={`font-bold text-sm md:text-base ${theme.badgeText}`}>Chapter {chapter.id}</span>
+                            <span className={`font-bold text-sm md:text-base ${theme.badgeText}`}>
+                                {language === 'ko' ? '페이지' : 'Page'} {chapter.id}
+                            </span>
                         </div>
                     </motion.div>
                 </div>
             </div>
 
-            {/* Right Page: Content (Desktop) / Bottom (Mobile) */}
             <div className={`w-full md:w-7/12 h-full flex flex-col relative bg-gradient-to-br ${theme.bg}`}>
                 <div className="flex-1 overflow-y-auto scrollbar-thin">
                     <div className="max-w-[650px] mx-auto px-6 py-10 md:px-10 md:py-12 lg:px-12 lg:py-14">
@@ -157,86 +165,178 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                             transition={{ delay: 0.3, duration: 0.6 }}
                             key={language}
                         >
-                            <h1 className="font-bold mb-8 md:mb-10 text-gray-900 leading-tight relative inline-block" style={{ fontSize: 'clamp(1.875rem, 5vw, 2.5rem)' }}>
+                            <h1
+                                className="font-bold mb-6 md:mb-8 text-gray-900 leading-tight relative inline-block"
+                                style={{ fontSize: 'clamp(1.875rem, 5vw, 2.5rem)' }}
+                            >
                                 {title}
                                 <motion.div
                                     className={`absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r ${theme.underline} rounded-full`}
                                     initial={{ scaleX: 0, opacity: 0 }}
                                     animate={{ scaleX: 1, opacity: 1 }}
-                                    transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-                                    style={{ transformOrigin: "left" }}
+                                    transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
+                                    style={{ transformOrigin: 'left' }}
                                 ></motion.div>
                             </h1>
 
                             <div className="prose-custom space-y-6">
-                            {content.map((paragraph, index) => (
                                 <motion.p
-                                    key={index}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 * index, duration: 0.4 }}
-                                    className={paragraph.startsWith('>') ? 'quote-block' : 'body-paragraph'}
+                                    transition={{ delay: 0.1, duration: 0.4 }}
+                                    className="body-paragraph"
                                     style={{ marginBottom: '1.5em', lineHeight: '1.85' }}
                                 >
-                                    {paragraph.startsWith('>') ? (
-                                        <span className={`block pl-6 border-l-4 ${theme.quote} italic text-gray-700 py-4 pr-6 rounded-r-xl shadow-sm`} style={{ fontSize: '1em', lineHeight: '1.75' }}>
-                                            💭 {paragraph.replace(/^>\s*/, '')}
-                                        </span>
-                                    ) : (
-                                        paragraph.split('**').map((part, i) =>
-                                            i % 2 === 1 ?
-                                            <mark key={i} className={`${theme.highlight} px-1 py-0.5 rounded font-semibold text-gray-900`}>{part}</mark> :
-                                            part
-                                        )
-                                    )}
+                                    {content}
                                 </motion.p>
-                            ))}
-                        </div>
+                            </div>
 
-                        {/* End of Chapter Decoration */}
-                        <motion.div
-                            className="flex flex-col items-center gap-4 mt-20 mb-8"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.8, duration: 0.6 }}
-                        >
-                            <div className="flex items-center gap-3">
-                                <motion.span
-                                    className="text-3xl"
-                                    animate={{ rotate: [0, -15, 15, -15, 0], scale: [1, 1.2, 1] }}
-                                    transition={{ delay: 1.2, duration: 0.8, ease: "easeInOut" }}
-                                >⭐</motion.span>
-                                <span className="text-sm font-medium text-gray-500">Chapter Complete</span>
-                                <motion.span
-                                    className="text-3xl"
-                                    animate={{ rotate: [0, 15, -15, 15, 0], scale: [1, 1.2, 1] }}
-                                    transition={{ delay: 1.2, duration: 0.8, ease: "easeInOut" }}
-                                >⭐</motion.span>
-                            </div>
-                            <div className="flex gap-2">
-                                {Array.from({ length: 7 }).map((_, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className={`w-2 h-2 rounded-full transition-all ${
-                                            i < chapter.id ? theme.progress : 'bg-gray-200'
-                                        }`}
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{
-                                            delay: 1 + (i * 0.08),
-                                            type: "spring",
-                                            stiffness: 300,
-                                            damping: 15
-                                        }}
+                            <div className="mt-8 space-y-6">
+                                <section className={`rounded-2xl border ${theme.card} p-5 shadow-sm`}>
+                                    <div className="flex items-center justify-between">
+                                        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-[0.2em]">
+                                            Q
+                                        </h2>
+                                        <button
+                                            type="button"
+                                            onClick={handleSkipQuestion}
+                                            className="text-xs font-semibold text-gray-400 hover:text-gray-500 transition"
+                                        >
+                                            {language === 'ko' ? '건너뛰기' : 'Skip'}
+                                        </button>
+                                    </div>
+                                    <p className="mt-3 text-lg font-semibold text-gray-900 leading-relaxed">{question}</p>
+                                    <p className="mt-2 text-sm text-gray-500">
+                                        {language === 'ko'
+                                            ? '정답이 없는 질문이에요. 생각만 해도 좋아요.'
+                                            : 'There is no right answer. Thinking is enough.'}
+                                    </p>
+                                </section>
+
+                                <section className={`rounded-2xl border ${theme.card} p-5 shadow-sm`}>
+                                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-[0.2em]">
+                                        Build
+                                    </h2>
+                                    <p className="mt-3 text-base text-gray-600">
+                                        {language === 'ko'
+                                            ? '두 가지 선택 중 하나를 골라보세요.'
+                                            : 'Pick one of the two choices.'}
+                                    </p>
+                                    <div className="mt-4 grid gap-3">
+                                        {choices.map(choice => (
+                                            <button
+                                                key={choice.id}
+                                                type="button"
+                                                onClick={() => handleChoiceSelect(choice.id)}
+                                                className={`w-full text-left px-4 py-3 rounded-xl border transition-all font-semibold min-h-[52px] ${
+                                                    selectedChoice === choice.id
+                                                        ? `border-transparent bg-gradient-to-r ${theme.nav} text-white shadow-md`
+                                                        : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:shadow-sm'
+                                                }`}
+                                            >
+                                                <span className="text-sm uppercase tracking-[0.15em] opacity-70">{choice.id}</span>
+                                                <span className="block mt-1 text-base leading-relaxed">{choice.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                <section className={`rounded-2xl border ${theme.card} p-5 shadow-sm`}>
+                                    <div className="flex items-center justify-between">
+                                        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-[0.2em]">
+                                            CoLab
+                                        </h2>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowAiContinuation(prev => !prev)}
+                                            className="text-xs font-semibold text-gray-500 hover:text-gray-700 transition"
+                                        >
+                                            {showAiContinuation
+                                                ? language === 'ko'
+                                                    ? '닫기'
+                                                    : 'Hide'
+                                                : language === 'ko'
+                                                    ? 'AI에게 다음 장면 부탁하기'
+                                                    : 'Ask AI to help'}
+                                        </button>
+                                    </div>
+                                    <p className="mt-3 text-sm text-gray-500">
+                                        {language === 'ko'
+                                            ? 'AI는 짧게 이어 쓰고, 다음 결정을 남겨둘 거예요.'
+                                            : 'AI writes a short continuation and leaves room for the next choice.'}
+                                    </p>
+                                    {showAiContinuation && (
+                                        <div className="mt-4 rounded-xl border border-dashed border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 leading-relaxed">
+                                            {aiContinuation}
+                                        </div>
+                                    )}
+                                </section>
+
+                                <section className={`rounded-2xl border ${theme.card} p-5 shadow-sm`}>
+                                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-[0.2em]">
+                                        Reflection
+                                    </h2>
+                                    <p className="mt-3 text-lg font-semibold text-gray-900 leading-relaxed">{reflectionQuestion}</p>
+                                    <textarea
+                                        value={reflectionText}
+                                        onChange={event => setReflectionText(event.target.value)}
+                                        placeholder={language === 'ko'
+                                            ? '여기에 생각을 적어볼까요?'
+                                            : 'Write your thoughts here.'}
+                                        className="mt-4 w-full min-h-[120px] rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
                                     />
-                                ))}
+                                    <p className="mt-2 text-xs text-gray-400">
+                                        {language === 'ko'
+                                            ? '텍스트, 음성, 혹은 보호자의 도움으로 기록할 수 있어요.'
+                                            : 'Text, voice, or parent-assisted input can be captured here.'}
+                                    </p>
+                                </section>
                             </div>
+
+                            <motion.div
+                                className="flex flex-col items-center gap-4 mt-14 mb-8"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.8, duration: 0.6 }}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <motion.span
+                                        className="text-3xl"
+                                        animate={{ rotate: [0, -15, 15, -15, 0], scale: [1, 1.2, 1] }}
+                                        transition={{ delay: 1.2, duration: 0.8, ease: 'easeInOut' }}
+                                    >⭐</motion.span>
+                                    <span className="text-sm font-medium text-gray-500">
+                                        {language === 'ko' ? '페이지 완료' : 'Page Complete'}
+                                    </span>
+                                    <motion.span
+                                        className="text-3xl"
+                                        animate={{ rotate: [0, 15, -15, 15, 0], scale: [1, 1.2, 1] }}
+                                        transition={{ delay: 1.2, duration: 0.8, ease: 'easeInOut' }}
+                                    >⭐</motion.span>
+                                </div>
+                                <div className="flex gap-2">
+                                    {Array.from({ length: totalChapters }).map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            className={`w-2 h-2 rounded-full transition-all ${
+                                                i < chapter.id ? theme.progress : 'bg-gray-200'
+                                            }`}
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{
+                                                delay: 1 + (i * 0.08),
+                                                type: 'spring',
+                                                stiffness: 300,
+                                                damping: 15
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
                     </div>
                 </div>
 
-                {/* Navigation Footer */}
                 <div className={`border-t-2 ${theme.badge.split(' ')[0]} bg-gradient-to-r from-white via-${theme.badgeText.split('-')[1]}-50/30 to-white relative z-20`}>
                     <div className="max-w-[650px] mx-auto px-6 py-5 md:px-10 md:py-6 flex items-center justify-between">
                         <button
@@ -256,7 +356,7 @@ const Chapter: React.FC<ChapterProps> = ({ chapter, onNext, onPrev, isFirst, isL
                             <div className={`flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border-2 ${theme.badge.split(' ')[0]}`}>
                                 <span className="text-xl">📖</span>
                                 <span className={`text-sm font-bold ${theme.badgeText}`}>
-                                    {chapter.id} / 7
+                                    {chapter.id} / {totalChapters}
                                 </span>
                             </div>
                         </div>

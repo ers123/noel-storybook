@@ -76,6 +76,7 @@ const Book: React.FC = () => {
                         onPrev={prevChapter}
                         isFirst={currentChapterIndex === 0}
                         isLast={currentChapterIndex === story.length - 1}
+                        totalChapters={story.length}
                     />
                 </AnimatePresence>
 
