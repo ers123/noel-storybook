@@ -5,6 +5,7 @@ import { LanguageProvider } from '../../shared/context/LanguageContext';
 import InteractivePage from './components/InteractivePage';
 import Settings from './components/Settings';
 import { story } from '../../shared/data/story';
+import type { SessionData } from './types';
 
 /**
  * InteractiveApp - Q-Build-CoLab MVP
@@ -17,7 +18,7 @@ import { story } from '../../shared/data/story';
  */
 function InteractiveApp() {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [sessionData, setSessionData] = useState<any[]>([]);
+  const [sessionData, setSessionData] = useState<SessionData[]>([]);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Load session data from localStorage on mount
@@ -54,15 +55,9 @@ function InteractiveApp() {
     localStorage.setItem('interactive_current_page', currentPageIndex.toString());
   }, [currentPageIndex]);
 
-  const handlePageComplete = (pageData: any) => {
-    // Log interaction data
-    const newData = {
-      pageIndex: currentPageIndex,
-      timestamp: new Date().toISOString(),
-      ...pageData
-    };
-
-    setSessionData(prev => [...prev, newData]);
+  const handlePageComplete = (pageData: SessionData) => {
+    // pageData already includes all required fields from InteractivePage
+    setSessionData(prev => [...prev, pageData]);
 
     // Move to next page
     if (currentPageIndex < story.length - 1) {

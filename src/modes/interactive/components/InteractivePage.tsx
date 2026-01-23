@@ -1,21 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Chapter } from '../../../shared/data/story';
 import { useLanguage } from '../../../shared/context/LanguageContext';
 import QuestionBlock from './QuestionBlock';
 import ChoiceBlock from './ChoiceBlock';
 import AIWriterFriend from './AIWriterFriend';
 import ReflectionBlock from './ReflectionBlock';
-
-interface InteractivePageProps {
-  chapter: Chapter;
-  pageIndex: number;
-  totalPages: number;
-  onComplete: (data: any) => void;
-  onOpenSettings?: () => void;
-}
-
-type PageState = 'story' | 'question' | 'choice' | 'ai' | 'reflection';
+import type { InteractivePageProps, PageState, SessionData } from '../types';
 
 const InteractivePage: React.FC<InteractivePageProps> = ({
   chapter,
@@ -36,6 +26,9 @@ const InteractivePage: React.FC<InteractivePageProps> = ({
   const [aiContinuation, setAiContinuation] = useState<string | null>(null);
   const [questionAnswered, setQuestionAnswered] = useState(false);
 
+  // Track page start time for accurate time measurement (Issue #4)
+  const [pageStartTime] = useState(Date.now());
+
   const handleQuestionContinue = (answered: boolean) => {
     setQuestionAnswered(answered);
     setPageState('choice');
@@ -52,19 +45,24 @@ const InteractivePage: React.FC<InteractivePageProps> = ({
   };
 
   const handleReflectionSubmit = (reflectionText: string) => {
-    // Collect all interaction data
-    const interactionData = {
+    // Calculate actual time spent on this page (Issue #4 fix)
+    const timeSpentMs = Date.now() - pageStartTime;
+
+    // Collect all interaction data with proper typing
+    const sessionData: SessionData = {
+      pageIndex,
       chapterId: chapter.id,
       chapterTitle: title,
       questionAnswered,
-      selectedChoice,
+      selectedChoice: selectedChoice!, // We know this is not null at reflection stage
       usedAI: !!aiContinuation,
       aiContinuation,
       reflection: reflectionText,
-      timeSpent: Date.now() // Could track actual time spent
+      timestamp: new Date().toISOString(),
+      timeSpentMs
     };
 
-    onComplete(interactionData);
+    onComplete(sessionData);
   };
 
   return (
