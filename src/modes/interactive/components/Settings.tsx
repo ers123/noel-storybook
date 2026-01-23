@@ -16,6 +16,7 @@ interface SettingsProps {
 const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
   const [apiKey, setApiKey] = useState('');
   const [saved, setSaved] = useState(false);
+  const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
     // Load API key from localStorage on mount
@@ -25,15 +26,47 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
     }
   }, []);
 
-  const handleSave = () => {
-    if (apiKey.trim()) {
-      localStorage.setItem('gemini_api_key', apiKey.trim());
-      setSaved(true);
-      setTimeout(() => {
-        setSaved(false);
-        onClose();
-      }, 1500);
+  /**
+   * Validate Gemini API key format (Issue #9)
+   * Gemini API keys typically start with "AIza" and are 39 characters
+   */
+  const validateApiKey = (key: string): { valid: boolean; error?: string } => {
+    const trimmedKey = key.trim();
+
+    if (!trimmedKey) {
+      return { valid: false, error: 'API key cannot be empty' };
     }
+
+    if (trimmedKey.length < 30) {
+      return { valid: false, error: 'API key is too short (minimum 30 characters)' };
+    }
+
+    if (!trimmedKey.startsWith('AIza')) {
+      return { valid: false, error: 'Gemini API keys should start with "AIza"' };
+    }
+
+    if (!/^[A-Za-z0-9_-]+$/.test(trimmedKey)) {
+      return { valid: false, error: 'API key contains invalid characters' };
+    }
+
+    return { valid: true };
+  };
+
+  const handleSave = () => {
+    const validation = validateApiKey(apiKey);
+
+    if (!validation.valid) {
+      setValidationError(validation.error || 'Invalid API key');
+      return;
+    }
+
+    localStorage.setItem('gemini_api_key', apiKey.trim());
+    setValidationError('');
+    setSaved(true);
+    setTimeout(() => {
+      setSaved(false);
+      onClose();
+    }, 1500);
   };
 
   const handleClear = () => {
@@ -106,10 +139,30 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, onClose }) => {
                 <input
                   type="password"
                   value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="Enter your Gemini API key"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all font-mono text-sm"
+                  onChange={(e) => {
+                    setApiKey(e.target.value);
+                    setValidationError(''); // Clear error on input (Issue #9)
+                  }}
+                  placeholder="Enter your Gemini API key (starts with AIza...)"
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:ring transition-all font-mono text-sm ${
+                    validationError
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                      : 'border-gray-300 focus:border-purple-500 focus:ring-purple-200'
+                  }`}
                 />
+
+                {/* Validation Error (Issue #9) */}
+                {validationError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-2 flex items-start gap-2 text-sm text-red-700 bg-red-50 p-2 rounded-lg"
+                  >
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <span>{validationError}</span>
+                  </motion.div>
+                )}
+
                 <p className="mt-2 text-xs text-gray-500">
                   Get your free API key from{' '}
                   <a
