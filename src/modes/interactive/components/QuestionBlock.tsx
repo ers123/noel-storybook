@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { getQuestion } from '../data/prompts';
 
 interface QuestionBlockProps {
   chapterId: number;
@@ -17,18 +18,10 @@ interface QuestionBlockProps {
 const QuestionBlock: React.FC<QuestionBlockProps> = ({ chapterId, onContinue }) => {
   const [answer, setAnswer] = useState('');
 
-  // Chapter-specific questions (PRD: trigger metacognition)
-  const questions: Record<number, string> = {
-    1: "What feels strange here?",
-    2: "Who do you think Noel will meet?",
-    3: "What would you do in this situation?",
-    4: "Why is this hard for Noel?",
-    5: "What do you think is behind the door?",
-    6: "How has Noel changed?",
-    7: "What does this ending mean to you?"
-  };
-
-  const question = questions[chapterId] || "What do you think will happen next?";
+  // Get question from centralized prompts (Issue #11)
+  const questionPrompt = getQuestion(chapterId);
+  const question = questionPrompt.question;
+  const helpText = questionPrompt.helpText;
 
   const handleSkip = () => {
     onContinue(false);
@@ -62,9 +55,14 @@ const QuestionBlock: React.FC<QuestionBlockProps> = ({ chapterId, onContinue }) 
 
       {/* Question Text */}
       <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-xl">
-        <p className="text-xl font-medium text-gray-800">
+        <p className="text-xl font-medium text-gray-800 mb-2">
           {question}
         </p>
+        {helpText && (
+          <p className="text-sm text-gray-600 italic">
+            💡 {helpText}
+          </p>
+        )}
       </div>
 
       {/* Answer Input (Optional) */}

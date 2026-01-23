@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { getChoice } from '../data/prompts';
 
 interface ChoiceBlockProps {
   chapterId: number;
@@ -15,42 +16,10 @@ interface ChoiceBlockProps {
  * - Neither labeled as correct
  */
 const ChoiceBlock: React.FC<ChoiceBlockProps> = ({ chapterId, onChoice }) => {
-  // Chapter-specific choices (PRD: meaningfully different, no "correct" label)
-  const choices: Record<number, { A: string; B: string }> = {
-    1: {
-      A: "Look for a friend who understands",
-      B: "Try to change myself to fit in"
-    },
-    2: {
-      A: "Trust Lia and open up",
-      B: "Keep my distance to stay safe"
-    },
-    3: {
-      A: "Say thank you to Lia",
-      B: "Show gratitude through actions"
-    },
-    4: {
-      A: "Ask for help from Lia",
-      B: "Try to figure it out alone"
-    },
-    5: {
-      A: "Open the door and explore",
-      B: "Walk away quietly"
-    },
-    6: {
-      A: "Share my story with the class",
-      B: "Keep it to myself for now"
-    },
-    7: {
-      A: "Look forward to tomorrow",
-      B: "Reflect on how far I've come"
-    }
-  };
-
-  const choice = choices[chapterId] || {
-    A: "Go forward with courage",
-    B: "Take time to think more"
-  };
+  // Get choices from centralized prompts (Issue #11)
+  const choicePrompt = getChoice(chapterId);
+  const choiceA = choicePrompt.choiceA;
+  const choiceB = choicePrompt.choiceB;
 
   return (
     <motion.div
@@ -98,10 +67,10 @@ const ChoiceBlock: React.FC<ChoiceBlockProps> = ({ chapterId, onChoice }) => {
           </div>
           <div className="pr-12">
             <div className="text-lg font-semibold mb-2">
-              {choice.A}
+              {choiceA.label}
             </div>
             <div className="text-sm text-purple-100">
-              Click to choose this path
+              {choiceA.description}
             </div>
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
@@ -119,10 +88,10 @@ const ChoiceBlock: React.FC<ChoiceBlockProps> = ({ chapterId, onChoice }) => {
           </div>
           <div className="pr-12">
             <div className="text-lg font-semibold mb-2">
-              {choice.B}
+              {choiceB.label}
             </div>
             <div className="text-sm text-indigo-100">
-              Click to choose this path
+              {choiceB.description}
             </div>
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />

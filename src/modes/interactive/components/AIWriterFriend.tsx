@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Settings } from 'lucide-react';
+import { getMockAIResponse } from '../data/prompts';
 
 interface AIWriterFriendProps {
   chapterId: number;
@@ -32,43 +33,6 @@ const AIWriterFriend: React.FC<AIWriterFriendProps> = ({
   const [showAI, setShowAI] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isMockResponse, setIsMockResponse] = useState(false);
-
-  // Mock responses as fallback
-  const getMockResponse = (chapterId: number, choice: 'A' | 'B'): string => {
-    const mockResponses: Record<string, Record<'A' | 'B', string>> = {
-      '1': {
-        A: "Maybe there's someone out there who sees beyond appearances. Someone who understands what it's like to feel different.",
-        B: "Perhaps changing yourself isn't the answer. Maybe being different is what makes you special."
-      },
-      '2': {
-        A: "Trusting someone new is scary. But Lia seems genuine. What if this is the beginning of a real friendship?",
-        B: "Keeping distance feels safer. But staying alone... is that really protection, or just another kind of hurt?"
-      },
-      '3': {
-        A: "Words can be powerful. Sometimes 'thank you' is exactly what someone needs to hear.",
-        B: "Actions speak louder than words. What small gesture could show Lia how much this means to you?"
-      },
-      '4': {
-        A: "Asking for help isn't weakness. Lia offered friendship — maybe she wants to help with more than just lunch.",
-        B: "Trying alone shows determination. But sometimes the bravest thing is admitting you need someone."
-      },
-      '5': {
-        A: "Behind every door marked 'death' might be an ordinary truth waiting to be discovered. Courage means opening it anyway.",
-        B: "Walking away is also a choice. Sometimes wisdom means knowing which doors to leave closed."
-      },
-      '6': {
-        A: "Sharing your story makes you vulnerable. But vulnerability can also be strength. Who knows who might be listening?",
-        B: "Privacy is valid too. You don't owe anyone your story — it's yours to tell when you're ready."
-      },
-      '7': {
-        A: "Tomorrow holds new possibilities. You've learned that being different isn't being wrong. What comes next?",
-        B: "Looking back, you've come so far. From 'wrong' to just 'different.' That journey matters."
-      }
-    };
-
-    return mockResponses[chapterId]?.[choice] ||
-      "The story continues in ways you might not expect. What happens next depends on your next choice.";
-  };
 
   const handleRequestAI = async () => {
     setIsLoading(true);
@@ -146,9 +110,9 @@ Continue the story:`;
 
       setError(errorMessage);
 
-      // Use mock fallback for recoverable errors
+      // Use mock fallback for recoverable errors (Issue #11: centralized prompts)
       if (shouldUseFallback) {
-        const mockFallback = getMockResponse(chapterId, selectedChoice);
+        const mockFallback = getMockAIResponse(chapterId, selectedChoice);
         setAiText(mockFallback);
         setIsMockResponse(true); // Using sample response, not real AI
       }
