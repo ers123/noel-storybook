@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { Settings as SettingsIcon } from 'lucide-react';
 import { LanguageProvider } from '../../shared/context/LanguageContext';
+import ErrorBoundary from '../../shared/components/ErrorBoundary';
 import InteractivePage from './components/InteractivePage';
 import Settings from './components/Settings';
 import { story } from '../../shared/data/story';
@@ -78,52 +79,54 @@ function InteractiveApp() {
   };
 
   return (
-    <LanguageProvider>
-      <HelmetProvider>
-        <Helmet>
-          <title>Noel - Interactive Thinking Trainer</title>
-          <meta name="description" content="Practice questioning, choosing, and collaborating with AI through stories." />
-          <meta property="og:title" content="Noel - Interactive Thinking Trainer" />
-          <meta property="og:description" content="A thinking trainer where children practice the Q-Build-CoLab loop." />
-          <meta property="og:image" content="assets/images/og-image.png" />
-          <meta property="og:type" content="website" />
-          <link rel="icon" type="image/png" href="assets/images/icon.png" />
-        </Helmet>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <HelmetProvider>
+          <Helmet>
+            <title>Noel - Interactive Thinking Trainer</title>
+            <meta name="description" content="Practice questioning, choosing, and collaborating with AI through stories." />
+            <meta property="og:title" content="Noel - Interactive Thinking Trainer" />
+            <meta property="og:description" content="A thinking trainer where children practice the Q-Build-CoLab loop." />
+            <meta property="og:image" content="assets/images/og-image.png" />
+            <meta property="og:type" content="website" />
+            <link rel="icon" type="image/png" href="assets/images/icon.png" />
+          </Helmet>
 
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-          {/* Settings Button */}
-          <button
-            onClick={() => setIsSettingsOpen(true)}
-            className="fixed top-20 right-4 z-50 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 border-2 border-purple-200"
-            aria-label="Open Settings"
-          >
-            <SettingsIcon className="w-5 h-5 text-purple-600" />
-          </button>
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+            {/* Settings Button */}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="fixed top-20 right-4 z-50 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 border-2 border-purple-200"
+              aria-label="Open Settings"
+            >
+              <SettingsIcon className="w-5 h-5 text-purple-600" />
+            </button>
 
-          {/* Settings Panel */}
-          <Settings
-            isOpen={isSettingsOpen}
-            onClose={() => setIsSettingsOpen(false)}
-          />
+            {/* Settings Panel */}
+            <Settings
+              isOpen={isSettingsOpen}
+              onClose={() => setIsSettingsOpen(false)}
+            />
 
-          <InteractivePage
-            chapter={story[currentPageIndex]}
-            pageIndex={currentPageIndex}
-            totalPages={story.length}
-            onComplete={handlePageComplete}
-            onOpenSettings={() => setIsSettingsOpen(true)}
-          />
+            <InteractivePage
+              chapter={story[currentPageIndex]}
+              pageIndex={currentPageIndex}
+              totalPages={story.length}
+              onComplete={handlePageComplete}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+            />
 
-          {/* Debug Panel (Development Only) */}
-          {import.meta.env.DEV && (
-            <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded-lg text-xs max-w-xs max-h-48 overflow-auto">
-              <div className="font-bold mb-2">Session Data ({sessionData.length} interactions)</div>
-              <pre className="text-[10px]">{JSON.stringify(sessionData, null, 2)}</pre>
-            </div>
-          )}
-        </div>
-      </HelmetProvider>
-    </LanguageProvider>
+            {/* Debug Panel (Development Only) */}
+            {import.meta.env.DEV && (
+              <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded-lg text-xs max-w-xs max-h-48 overflow-auto">
+                <div className="font-bold mb-2">Session Data ({sessionData.length} interactions)</div>
+                <pre className="text-[10px]">{JSON.stringify(sessionData, null, 2)}</pre>
+              </div>
+            )}
+          </div>
+        </HelmetProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 }
 
