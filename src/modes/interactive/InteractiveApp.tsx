@@ -6,6 +6,13 @@ import InteractivePage from './components/InteractivePage';
 import Settings from './components/Settings';
 import { story } from '../../shared/data/story';
 import type { SessionData } from './types';
+import {
+  saveSessionData,
+  loadSessionData,
+  saveCurrentPage,
+  loadCurrentPage,
+  getStorageInfo
+} from './utils/storage';
 
 /**
  * InteractiveApp - Q-Build-CoLab MVP
@@ -21,38 +28,42 @@ function InteractiveApp() {
   const [sessionData, setSessionData] = useState<SessionData[]>([]);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // Load session data from localStorage on mount
+  // Load session data from localStorage on mount (Issue #3: Safe storage)
   useEffect(() => {
-    const savedData = localStorage.getItem('interactive_session_data');
-    const savedPage = localStorage.getItem('interactive_current_page');
+    const savedData = loadSessionData();
+    const savedPage = loadCurrentPage();
 
-    if (savedData) {
-      try {
-        setSessionData(JSON.parse(savedData));
-      } catch (e) {
-        console.error('Failed to load session data', e);
-      }
+    if (savedData.length > 0) {
+      setSessionData(savedData);
     }
 
-    if (savedPage) {
-      try {
-        setCurrentPageIndex(parseInt(savedPage, 10));
-      } catch (e) {
-        console.error('Failed to load page index', e);
-      }
-    }
+    setCurrentPageIndex(savedPage);
   }, []);
 
-  // Save session data to localStorage whenever it changes
+  // Save session data to localStorage whenever it changes (Issue #3: Safe storage with quota handling)
   useEffect(() => {
     if (sessionData.length > 0) {
-      localStorage.setItem('interactive_session_data', JSON.stringify(sessionData));
+      const result = saveSessionData(sessionData);
+
+      if (!result.success) {
+        console.error('Failed to save session data:', result.error);
+        // TODO: Show user-friendly notification
+      }
+
+      // Monitor storage usage
+      const info = getStorageInfo();
+      if (info.isNearLimit) {
+        console.warn(
+          `Storage nearly full: ${info.estimatedSizeKB}KB used, ${info.sessionCount} sessions stored`
+        );
+        // TODO: Show warning to user
+      }
     }
   }, [sessionData]);
 
-  // Save current page index
+  // Save current page index (Issue #3: Safe storage)
   useEffect(() => {
-    localStorage.setItem('interactive_current_page', currentPageIndex.toString());
+    saveCurrentPage(currentPageIndex);
   }, [currentPageIndex]);
 
   const handlePageComplete = (pageData: SessionData) => {
