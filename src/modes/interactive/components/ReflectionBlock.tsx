@@ -5,6 +5,8 @@ import { Mic } from 'lucide-react';
 interface ReflectionBlockProps {
   selectedChoice: 'A' | 'B';
   onSubmit: (reflection: string) => void;
+  initialReflection?: string;
+  onReflectionChange?: (text: string) => void;
 }
 
 /**
@@ -16,15 +18,24 @@ interface ReflectionBlockProps {
  */
 const ReflectionBlock: React.FC<ReflectionBlockProps> = ({
   selectedChoice,
-  onSubmit
+  onSubmit,
+  initialReflection = '',
+  onReflectionChange
 }) => {
-  const [reflection, setReflection] = useState('');
-  const [reflectionLength, setReflectionLength] = useState(0);
+  const [reflection, setReflection] = useState(initialReflection);
+  const [reflectionLength, setReflectionLength] = useState(
+    initialReflection.trim().split(/\s+/).filter(w => w.length > 0).length
+  );
   const [showVoiceHint, setShowVoiceHint] = useState(false);
 
   const handleReflectionChange = (text: string) => {
     setReflection(text);
     setReflectionLength(text.trim().split(/\s+/).filter(w => w.length > 0).length);
+
+    // Notify parent component for state persistence (Issue #6)
+    if (onReflectionChange) {
+      onReflectionChange(text);
+    }
   };
 
   const handleSubmit = () => {

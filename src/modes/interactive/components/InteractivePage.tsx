@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../../shared/context/LanguageContext';
 import QuestionBlock from './QuestionBlock';
@@ -6,6 +6,7 @@ import ChoiceBlock from './ChoiceBlock';
 import AIWriterFriend from './AIWriterFriend';
 import ReflectionBlock from './ReflectionBlock';
 import type { InteractivePageProps, PageState, SessionData } from '../types';
+import { savePageState, loadPageState, clearPageState } from '../utils/storage';
 
 const InteractivePage: React.FC<InteractivePageProps> = ({
   chapter,
@@ -25,9 +26,45 @@ const InteractivePage: React.FC<InteractivePageProps> = ({
   const [selectedChoice, setSelectedChoice] = useState<'A' | 'B' | null>(null);
   const [aiContinuation, setAiContinuation] = useState<string | null>(null);
   const [questionAnswered, setQuestionAnswered] = useState(false);
+  const [partialReflection, setPartialReflection] = useState('');
 
   // Track page start time for accurate time measurement (Issue #4)
   const [pageStartTime] = useState(Date.now());
+
+  // Restore page state on mount (Issue #6)
+  useEffect(() => {
+    const savedState = loadPageState();
+
+    if (savedState && savedState.pageIndex === pageIndex) {
+      // Only restore if it's for the current page
+      setPageState(savedState.pageState);
+      setSelectedChoice(savedState.selectedChoice);
+      setAiContinuation(savedState.aiContinuation);
+      setQuestionAnswered(savedState.questionAnswered);
+      setPartialReflection(savedState.partialReflection);
+      console.log('Restored page state:', savedState.pageState);
+    }
+  }, [pageIndex]);
+
+  // Save page state whenever it changes (Issue #6)
+  useEffect(() => {
+    // Don't save if we're still on the initial 'story' state (nothing to restore)
+    if (pageState === 'story' && !selectedChoice && !questionAnswered) {
+      return;
+    }
+
+    const stateData = {
+      pageIndex,
+      pageState,
+      selectedChoice,
+      aiContinuation,
+      questionAnswered,
+      partialReflection,
+      timestamp: new Date().toISOString()
+    };
+
+    savePageState(stateData);
+  }, [pageIndex, pageState, selectedChoice, aiContinuation, questionAnswered, partialReflection]);
 
   const handleQuestionContinue = (answered: boolean) => {
     setQuestionAnswered(answered);
@@ -61,6 +98,9 @@ const InteractivePage: React.FC<InteractivePageProps> = ({
       timestamp: new Date().toISOString(),
       timeSpentMs
     };
+
+    // Clear saved page state since we're completing this page (Issue #6)
+    clearPageState();
 
     onComplete(sessionData);
   };
@@ -161,6 +201,8 @@ const InteractivePage: React.FC<InteractivePageProps> = ({
               <ReflectionBlock
                 selectedChoice={selectedChoice!}
                 onSubmit={handleReflectionSubmit}
+                initialReflection={partialReflection}
+                onReflectionChange={setPartialReflection}
               />
             )}
           </AnimatePresence>

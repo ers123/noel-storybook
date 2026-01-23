@@ -5,11 +5,12 @@
  * This module provides safe operations with automatic cleanup
  */
 
-import type { SessionData } from '../types';
+import type { SessionData, PageState } from '../types';
 
 const STORAGE_KEYS = {
   SESSION_DATA: 'interactive_session_data',
   CURRENT_PAGE: 'interactive_current_page',
+  PAGE_STATE: 'interactive_page_state',
   API_KEY: 'gemini_api_key'
 } as const;
 
@@ -196,6 +197,7 @@ export function clearAppData(): void {
 
   localStorage.removeItem(STORAGE_KEYS.SESSION_DATA);
   localStorage.removeItem(STORAGE_KEYS.CURRENT_PAGE);
+  localStorage.removeItem(STORAGE_KEYS.PAGE_STATE);
 
   // Restore API key
   if (apiKey) {
@@ -203,6 +205,41 @@ export function clearAppData(): void {
   }
 
   console.log('App data cleared (API key preserved)');
+}
+
+/**
+ * Page state data for restoration after refresh
+ */
+export interface PageStateData {
+  pageIndex: number;
+  pageState: PageState;
+  selectedChoice: 'A' | 'B' | null;
+  aiContinuation: string | null;
+  questionAnswered: boolean;
+  partialReflection: string;
+  timestamp: string;
+}
+
+/**
+ * Save current page state for restoration (Issue #6)
+ */
+export function savePageState(stateData: PageStateData): StorageResult<void> {
+  return safeSetItem(STORAGE_KEYS.PAGE_STATE, stateData);
+}
+
+/**
+ * Load saved page state (Issue #6)
+ */
+export function loadPageState(): PageStateData | null {
+  const result = safeGetItem<PageStateData>(STORAGE_KEYS.PAGE_STATE);
+  return result.data || null;
+}
+
+/**
+ * Clear saved page state (called when page is completed)
+ */
+export function clearPageState(): void {
+  localStorage.removeItem(STORAGE_KEYS.PAGE_STATE);
 }
 
 export { STORAGE_KEYS };
